@@ -69,7 +69,7 @@ class OPMLImporter
     {
         if ($outline->getAttribute('type') === 'rss') {
             // take title if available, otherwise use text #2896
-            $title = $outline->getAttribute('title') ?? $outline->getAttribute('text');
+            $title = $outline->getAttribute('title') ?: $outline->getAttribute('text') ?: null;
             $feed = [
                 'link' => $outline->getAttribute('htmlUrl'),
                 'url' => $outline->getAttribute('xmlUrl'),

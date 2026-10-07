@@ -99,4 +99,43 @@ class OPMLImporterTest extends TestCase
         $this->assertNotNull($result, 'Should handle multiple leading blank lines');
         $this->assertCount(1, $result[1]);
     }
+
+    public function testImportUsesTextWhenTitleIsMissing(): void
+    {
+        $userId = 'test-user';
+
+        // OPML content without title attributes (from FreshRSS)
+        $opmlWithoutTitle = '<?xml version="1.0" encoding="UTF-8"?>
+<opml version="2.0">
+  <body>
+    <outline text="Android">
+      <outline text="LineageOS" type="rss" xmlUrl="https://lineageos.org/feed.xml" htmlUrl="https://lineageos.org"/>
+    </outline>
+  </body>
+</opml>';
+
+        $result = $this->importer->import($userId, $opmlWithoutTitle);
+
+        $this->assertNotNull($result);
+        $this->assertCount(1, $result[1]);
+        $this->assertSame('LineageOS', $result[1][0]['title']);
+    }
+
+    public function testImportWithoutTitleAndTextLeavesTitleUnset(): void
+    {
+        $userId = 'test-user';
+
+        $opmlWithoutNames = '<?xml version="1.0" encoding="UTF-8"?>
+<opml version="2.0">
+  <body>
+    <outline type="rss" xmlUrl="http://example.com/rss" htmlUrl="http://example.com/feed"/>
+  </body>
+</opml>';
+
+        $result = $this->importer->import($userId, $opmlWithoutNames);
+
+        $this->assertNotNull($result);
+        $this->assertCount(1, $result[1]);
+        $this->assertNull($result[1][0]['title']);
+    }
 }

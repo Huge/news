@@ -10,6 +10,7 @@ You can also check [on GitHub](https://github.com/nextcloud/news/releases), the 
 ### Changed
 
 ### Fixed
+- Use the `text` attribute as the feed title on OPML import when `title` is missing, and keep the feed's own title when both are missing
 
 # Releases
 ## [29.0.0-beta.1] - 2026-09-20
